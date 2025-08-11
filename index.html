@@ -1768,11 +1768,16 @@
               window.open(LINKS.events, '_blank', 'noopener');
               break;
             case 'socials':
-            case 'social':
-              print(`$ X/Twitter → <a class="link" href="${LINKS.x}" target="_blank" rel="noopener">${LINKS.x.replace('https://','')}</a>`);
-              print(`$ Instagram → <a class="link" href="${LINKS.instagram}" target="_blank" rel="noopener">${LINKS.instagram.replace('https://','')}</a>`);
-              print(`$ LinkedIn → <a class="link" href="${LINKS.linkedin}" target="_blank" rel="noopener">${LINKS.linkedin.replace('https://','')}</a>`);
+            case 'social': {
+              const inline = `$
+                <a class="link" href="${LINKS.x}" target="_blank" rel="noopener">X/Twitter</a>
+                <span class="sep">|</span>
+                <a class="link" href="${LINKS.instagram}" target="_blank" rel="noopener">Instagram</a>
+                <span class="sep">|</span>
+                <a class="link" href="${LINKS.linkedin}" target="_blank" rel="noopener">LinkedIn</a>`;
+              print(inline);
               break;
+            }
             case 'x':
             case 'twitter':
               window.open(LINKS.x, '_blank', 'noopener');
