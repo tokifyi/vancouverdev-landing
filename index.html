@@ -1584,12 +1584,13 @@
           <span class="dot dot-green"></span>
           <span class="title">vancouver.dev — terminal</span>
         </div>
-        <div class="terminal-body">
+        <div class="terminal-body" tabindex="0" aria-label="CLI terminal">
           <div class="line"><span class="ps1">vancouver.dev</span>:~$ <span class="typed" data-text="welcome to vancouver.dev"></span><span class="caret"></span></div>
           <div class="line hint">Type a command or click one:</div>
           <div class="line">$ help — <a class="cmd" href="https://lu.ma/app4vandev">join</a> • <a class="cmd" href="https://lu.ma/vancouver.dev">events</a> • <a class="cmd" href="#about">about</a></div>
           <div class="line">$ join — opens Discord → <a class="link" href="https://lu.ma/app4vandev" target="_blank" rel="noopener">https://lu.ma/app4vandev</a></div>
           <div class="line">$ events — upcoming schedule → <a class="link" href="https://lu.ma/vancouver.dev" target="_blank" rel="noopener">lu.ma/vancouver.dev</a></div>
+          <div id="input-line" class="line"><span class="ps1">vancouver.dev</span>:~$ <span id="term-input"></span><span class="caret"></span></div>
         </div>
       </div>
     </div>
@@ -1691,6 +1692,7 @@
 
       /* Hide original sections for the CLI view */
       .hero, .events-section, .join-section { display: none !important; }
+      .terminal-body { outline: none; cursor: text; }
     </style>
 
     <script>
@@ -1707,6 +1709,73 @@
           }
         };
         tick();
+      })();
+
+      // Simple interactive input
+      (function(){
+        const term = document.querySelector('.terminal-body');
+        const input = document.getElementById('term-input');
+        const inputLine = document.getElementById('input-line');
+        if (!term || !input) return;
+        let buffer = '';
+
+        const print = (html) => {
+          const div = document.createElement('div');
+          div.className = 'line';
+          div.innerHTML = html;
+          inputLine.before(div);
+          term.scrollTop = term.scrollHeight;
+        };
+
+        const handle = (cmd) => {
+          const c = cmd.trim();
+          if (!c) return;
+          print(`$ ${c}`);
+          switch (c) {
+            case 'help':
+              print('$ commands: help · join · events · about · clear');
+              break;
+            case 'join':
+              print('$ opening: <a class="link" href="https://lu.ma/app4vandev" target="_blank" rel="noopener">lu.ma/app4vandev</a>');
+              window.open('https://lu.ma/app4vandev', '_blank', 'noopener');
+              break;
+            case 'events':
+              print('$ opening: <a class="link" href="https://lu.ma/vancouver.dev" target="_blank" rel="noopener">lu.ma/vancouver.dev</a>');
+              window.open('https://lu.ma/vancouver.dev', '_blank', 'noopener');
+              break;
+            case 'about':
+              print("$ Vancouver’s developer community — meet builders, ship projects, learn together.");
+              break;
+            case 'clear':
+              // remove all lines except input line
+              [...term.querySelectorAll('.line')].forEach(l => { if (l !== inputLine) l.remove(); });
+              break;
+            default:
+              print(`$ ${c}: command not found`);
+          }
+        };
+
+        term.addEventListener('click', () => term.focus());
+        term.addEventListener('keydown', (e) => {
+          if (e.key === 'Backspace') {
+            buffer = buffer.slice(0, -1);
+            input.textContent = buffer;
+            e.preventDefault();
+            return;
+          }
+          if (e.key === 'Enter') {
+            handle(buffer);
+            buffer = '';
+            input.textContent = '';
+            e.preventDefault();
+            return;
+          }
+          if (e.key.length === 1 && !e.metaKey && !e.ctrlKey && !e.altKey) {
+            buffer += e.key;
+            input.textContent = buffer;
+            e.preventDefault();
+          }
+        });
       })();
     </script>
   </body>
