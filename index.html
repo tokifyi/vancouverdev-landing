@@ -1576,7 +1576,7 @@
     </style>
   </head>
   <body>
-    <div class="content-wrapper">
+    <div class="content-wrapper cli-wrap">
       <div class="terminal">
         <div class="terminal-header">
           <span class="dot dot-red"></span>
@@ -1587,14 +1587,9 @@
         <div class="terminal-body" tabindex="0" aria-label="CLI terminal">
           <div class="line"><span class="ps1">vancouver.dev</span>:~$ <span class="typed" data-text="welcome to vancouver.dev"></span><span class="caret"></span></div>
           <div class="line hint">Type a command or click one:</div>
-          <div class="line">$ help — <a class="cmd" href="https://lu.ma/app4vandev">join</a> <span class="sep">|</span> <a class="cmd" href="https://lu.ma/vancouver.dev">events</a> <span class="sep">|</span> <a class="cmd" href="#" onclick="return false;">socials</a></div>
+          <div class="line">$ help — <a class="cmd" href="https://lu.ma/app4vandev">join</a> <span class="sep">|</span> <a class="cmd" href="https://lu.ma/vancouver.dev">events</a> <span class="sep">|</span> <a class="cmd" href="#" onclick="window.cliHandle && window.cliHandle('socials'); return false;">socials</a></div>
           <div class="line">$ join — opens Discord → <a class="link" href="https://lu.ma/app4vandev" target="_blank" rel="noopener">https://lu.ma/app4vandev</a></div>
           <div class="line">$ events — upcoming schedule → <a class="link" href="https://lu.ma/vancouver.dev" target="_blank" rel="noopener">lu.ma/vancouver.dev</a></div>
-          <div class="line">$ socials — follow → 
-            <a class="link" href="https://x.com/vancouver_dev" target="_blank" rel="noopener">X/Twitter</a>
-            <span class="sep">|</span> <a class="link" href="https://www.instagram.com/vancouver.dev" target="_blank" rel="noopener">Instagram</a>
-            <span class="sep">|</span> <a class="link" href="https://www.linkedin.com/company/vancouver-dev" target="_blank" rel="noopener">LinkedIn</a>
-          </div>
           <div id="input-line" class="line"><span class="ps1">vancouver.dev</span>:~$ <span id="term-input"></span><span class="caret"></span></div>
         </div>
       </div>
@@ -1669,7 +1664,7 @@
         font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
         color: var(--text-primary);
         max-width: 880px;
-        margin: 24px auto;
+        margin: 0 auto;
         box-shadow: 0 10px 30px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.02) inset;
         backdrop-filter: blur(6px);
         position: relative;
@@ -1706,13 +1701,18 @@
       .sep { color: rgba(255,255,255,0.25); padding: 0 8px; }
       .cli-footer { max-width: 880px; margin: 8px auto 16px; text-align: center; color: var(--text-secondary); font-size: 12px; }
       .cli-footer .link { color: var(--neon-green); }
+      .chip { display: inline-block; padding: 2px 8px; border: 1px dashed rgba(0,255,149,0.35); border-radius: 6px; margin: 0 6px 0 0; background: rgba(0,255,149,0.06); }
+      .chip .link { color: var(--text-primary); }
+      .chip:hover { background: rgba(0,255,149,0.1); border-color: rgba(0,255,149,0.6); }
       .caret { display: inline-block; width: 8px; height: 1.1em; background: var(--text-primary); margin-left: 2px; animation: blink 1s steps(1) infinite; vertical-align: -2px; border-radius: 1px; }
       @keyframes blink { 0%, 50% { opacity: 1 } 50.01%, 100% { opacity: 0 } }
 
       /* Hide original sections for the CLI view */
       .hero, .events-section, .join-section { display: none !important; }
-      .terminal-body { outline: none; cursor: text; max-height: 72vh; overflow: auto; }
+      .terminal-body { outline: none; cursor: text; max-height: 70vh; overflow: auto; }
       .content-wrapper { padding: 0.75rem 0.75rem; max-width: 960px; }
+      .cli-wrap { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
+      .cli-footer { margin: 4px auto 18px; }
     </style>
 
     <script>
@@ -1772,12 +1772,10 @@
               break;
             case 'socials':
             case 'social': {
-              const inline = `$
-                <a class="link" href="${LINKS.x}" target="_blank" rel="noopener">X/Twitter</a>
-                <span class="sep">|</span>
-                <a class="link" href="${LINKS.instagram}" target="_blank" rel="noopener">Instagram</a>
-                <span class="sep">|</span>
-                <a class="link" href="${LINKS.linkedin}" target="_blank" rel="noopener">LinkedIn</a>`;
+              const inline = `$ socials — ` +
+                `<span class="chip"><a class="link" href="${LINKS.x}" target="_blank" rel="noopener">X/Twitter</a></span>` +
+                `<span class="chip"><a class="link" href="${LINKS.instagram}" target="_blank" rel="noopener">Instagram</a></span>` +
+                `<span class="chip"><a class="link" href="${LINKS.linkedin}" target="_blank" rel="noopener">LinkedIn</a></span>`;
               print(inline);
               break;
             }
@@ -1825,6 +1823,8 @@
             e.preventDefault();
           }
         });
+        // expose handler for inline link trigger
+        window.cliHandle = handle;
       })();
     </script>
   </body>
