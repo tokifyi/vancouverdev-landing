@@ -1740,11 +1740,14 @@
           join: 'https://lu.ma/app4vandev',
           events: 'https://lu.ma/vancouver.dev'
         };
+        const COMMANDS = ['help','join','events','socials','clear','x','twitter','ig','instagram','linkedin'];
         const term = document.querySelector('.terminal-body');
         const input = document.getElementById('term-input');
         const inputLine = document.getElementById('input-line');
         if (!term || !input) return;
         let buffer = '';
+        let history = JSON.parse(localStorage.getItem('cli_history') || '[]');
+        let historyIdx = -1;
 
         const print = (html) => {
           const div = document.createElement('div');
@@ -1757,6 +1760,13 @@
         const handle = (cmd) => {
           const c = cmd.trim();
           if (!c) return;
+          // save to history (dedupe consecutive)
+          if (history[0] !== c) {
+            history.unshift(c);
+            history = history.slice(0, 50);
+            localStorage.setItem('cli_history', JSON.stringify(history));
+          }
+          historyIdx = -1;
           print(`$ ${c}`);
           switch (c) {
             case 'help':
@@ -1807,6 +1817,47 @@
           if (e.key === 'Backspace') {
             buffer = buffer.slice(0, -1);
             input.textContent = buffer;
+            e.preventDefault();
+            return;
+          }
+          if (e.key === 'ArrowUp') {
+            if (history.length) {
+              historyIdx = Math.min(historyIdx + 1, history.length - 1);
+              buffer = history[historyIdx] || '';
+              input.textContent = buffer;
+            }
+            e.preventDefault();
+            return;
+          }
+          if (e.key === 'ArrowDown') {
+            if (history.length) {
+              historyIdx = Math.max(historyIdx - 1, -1);
+              buffer = historyIdx === -1 ? '' : (history[historyIdx] || '');
+              input.textContent = buffer;
+            }
+            e.preventDefault();
+            return;
+          }
+          if (e.key === 'Tab') {
+            const prefix = buffer.trim();
+            if (prefix.length) {
+              const matches = COMMANDS.filter(c => c.startsWith(prefix));
+              if (matches.length === 1) {
+                buffer = matches[0];
+                input.textContent = buffer;
+              } else if (matches.length > 1) {
+                // extend to longest common prefix
+                const lcp = (arr) => arr.reduce((a,b)=>{
+                  let i=0; while(i<a.length && i<b.length && a[i]===b[i]) i++; return a.slice(0,i);
+                });
+                const next = lcp(matches);
+                if (next && next.length > prefix.length) {
+                  buffer = next;
+                  input.textContent = buffer;
+                }
+                print('$ ' + matches.map(m=>`<span class="chip">${m}</span>`).join(' '));
+              }
+            }
             e.preventDefault();
             return;
           }
