@@ -1587,9 +1587,14 @@
         <div class="terminal-body" tabindex="0" aria-label="CLI terminal">
           <div class="line"><span class="ps1">vancouver.dev</span>:~$ <span class="typed" data-text="welcome to vancouver.dev"></span><span class="caret"></span></div>
           <div class="line hint">Type a command or click one:</div>
-          <div class="line">$ help — <a class="cmd" href="https://lu.ma/app4vandev">join</a> • <a class="cmd" href="https://lu.ma/vancouver.dev">events</a></div>
+          <div class="line">$ help — <a class="cmd" href="https://lu.ma/app4vandev">join</a> • <a class="cmd" href="https://lu.ma/vancouver.dev">events</a> • socials</div>
           <div class="line">$ join — opens Discord → <a class="link" href="https://lu.ma/app4vandev" target="_blank" rel="noopener">https://lu.ma/app4vandev</a></div>
           <div class="line">$ events — upcoming schedule → <a class="link" href="https://lu.ma/vancouver.dev" target="_blank" rel="noopener">lu.ma/vancouver.dev</a></div>
+          <div class="line">$ socials — follow → 
+            <a class="link" href="https://x.com/vancouver_dev" target="_blank" rel="noopener">X/Twitter</a>
+            · <a class="link" href="https://www.instagram.com/vancouver.dev" target="_blank" rel="noopener">Instagram</a>
+            · <a class="link" href="https://www.linkedin.com/company/vancouver-dev" target="_blank" rel="noopener">LinkedIn</a>
+          </div>
           <div id="input-line" class="line"><span class="ps1">vancouver.dev</span>:~$ <span id="term-input"></span><span class="caret"></span></div>
         </div>
       </div>
@@ -1724,6 +1729,13 @@
 
       // Simple interactive input
       (function(){
+        const LINKS = {
+          x: 'https://x.com/vancouver_dev',
+          instagram: 'https://www.instagram.com/vancouver.dev',
+          linkedin: 'https://www.linkedin.com/company/vancouver-dev',
+          join: 'https://lu.ma/app4vandev',
+          events: 'https://lu.ma/vancouver.dev'
+        };
         const term = document.querySelector('.terminal-body');
         const input = document.getElementById('term-input');
         const inputLine = document.getElementById('input-line');
@@ -1744,15 +1756,35 @@
           print(`$ ${c}`);
           switch (c) {
             case 'help':
-              print('$ commands: help · join · events · clear');
+              print('$ commands: help · join · events · socials · clear');
               break;
             case 'join':
-              print('$ opening: <a class="link" href="https://lu.ma/app4vandev" target="_blank" rel="noopener">lu.ma/app4vandev</a>');
-              window.open('https://lu.ma/app4vandev', '_blank', 'noopener');
+              print(`$ opening: <a class="link" href="${LINKS.join}" target="_blank" rel="noopener">lu.ma/app4vandev</a>`);
+              window.open(LINKS.join, '_blank', 'noopener');
               break;
             case 'events':
-              print('$ opening: <a class="link" href="https://lu.ma/vancouver.dev" target="_blank" rel="noopener">lu.ma/vancouver.dev</a>');
-              window.open('https://lu.ma/vancouver.dev', '_blank', 'noopener');
+              print(`$ opening: <a class="link" href="${LINKS.events}" target="_blank" rel="noopener">lu.ma/vancouver.dev</a>`);
+              window.open(LINKS.events, '_blank', 'noopener');
+              break;
+            case 'socials':
+            case 'social':
+              print(`$ X/Twitter → <a class="link" href="${LINKS.x}" target="_blank" rel="noopener">${LINKS.x.replace('https://','')}</a>`);
+              print(`$ Instagram → <a class="link" href="${LINKS.instagram}" target="_blank" rel="noopener">${LINKS.instagram.replace('https://','')}</a>`);
+              print(`$ LinkedIn → <a class="link" href="${LINKS.linkedin}" target="_blank" rel="noopener">${LINKS.linkedin.replace('https://','')}</a>`);
+              break;
+            case 'x':
+            case 'twitter':
+              window.open(LINKS.x, '_blank', 'noopener');
+              print('$ opening X/Twitter');
+              break;
+            case 'ig':
+            case 'instagram':
+              window.open(LINKS.instagram, '_blank', 'noopener');
+              print('$ opening Instagram');
+              break;
+            case 'linkedin':
+              window.open(LINKS.linkedin, '_blank', 'noopener');
+              print('$ opening LinkedIn');
               break;
             case 'clear':
               // remove all lines except input line
