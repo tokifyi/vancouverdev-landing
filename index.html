@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>vancouver.dev</title>
     <meta name="description" content="Vancouver's Developer Community" />
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/nes.css@2.3.0/css/nes.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/@kognise/water.css@2.1.1/dist/dark.min.css" rel="stylesheet">
     <meta name="author" content="vancouver.dev" />
@@ -16,7 +16,7 @@
     <meta name="twitter:site" content="@vancouver_dev" />
     <meta property="og:image" content="https://vancouver.dev/opengraph-image.png" />
     <meta name="twitter:image" content="https://vancouver.dev/opengraph-image.png" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
     <style>
       :root {
         --primary: #00ff00;
@@ -33,7 +33,7 @@
       }
       
       body {
-        font-family: 'Press Start 2P', cursive;
+        font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
         background-color: var(--background);
         color: var(--text-primary);
         line-height: 1.6;
@@ -53,6 +53,7 @@
       }
 
       .logo {
+        font-family: 'Press Start 2P', cursive;
         font-size: 2.2rem;
         text-align: center;
         margin: 3rem 0;
@@ -125,12 +126,46 @@
       }
 
       .hero p {
-        font-size: 1rem;
-        max-width: 600px;
-        margin: 2rem auto;
-        line-height: 1.8;
-        color: var(--text-secondary);
-        letter-spacing: 1px;
+        font-size: 1.2rem;
+        color: #FFFFFF !important;
+        margin: 2rem 0;
+        text-align: center;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        line-height: 1.6;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        opacity: 1;
+        background: none !important;
+        -webkit-background-clip: none !important;
+        background-clip: none !important;
+        animation: none !important;
+        mix-blend-mode: normal !important;
+        filter: none !important;
+      }
+
+      /* Remove any gradient text effects */
+      .hero p.gradient-text,
+      .hero p[class*="gradient"],
+      .hero p {
+        color: #FFFFFF !important;
+        background: none !important;
+        -webkit-background-clip: none !important;
+        background-clip: none !important;
+        animation: none !important;
+        mix-blend-mode: normal !important;
+        filter: none !important;
+      }
+
+      /* Override any other text effects */
+      .hero p * {
+        color: #FFFFFF !important;
+        background: none !important;
+        -webkit-background-clip: none !important;
+        background-clip: none !important;
+        animation: none !important;
+        mix-blend-mode: normal !important;
+        filter: none !important;
       }
 
       .events-link {
@@ -337,11 +372,11 @@
       }
 
       .skyline {
-        display: none;
+        display: block;
       }
 
       .buildings {
-        display: none;
+        display: block;
       }
 
       .stars {
@@ -357,11 +392,42 @@
       }
 
       .matrix-rain {
-        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: -1;
+        opacity: 0.3;
+        mix-blend-mode: screen;
       }
 
       .matrix-char {
-        display: none;
+        position: absolute;
+        color: var(--neon-green);
+        font-family: 'Press Start 2P', monospace;
+        font-size: 1rem;
+        opacity: 0.8;
+        text-shadow: 0 0 10px var(--neon-green);
+        animation: matrixFall 3s linear infinite;
+      }
+
+      @keyframes matrixFall {
+        0% {
+          transform: translateY(-100vh) rotateX(0deg);
+          opacity: 0;
+        }
+        10% {
+          opacity: 0.8;
+        }
+        90% {
+          opacity: 0.8;
+        }
+        100% {
+          transform: translateY(100vh) rotateX(360deg);
+          opacity: 0;
+        }
       }
 
       .star {
@@ -786,14 +852,6 @@
         100% { background-position: 100% 50% }
       }
 
-      .matrix-rain {
-        display: none;
-      }
-
-      .matrix-char {
-        display: none;
-      }
-
       .hero::before {
         content: '';
         position: absolute;
@@ -978,8 +1036,17 @@
         50% { transform: scale(1.1); opacity: 0.5; }
       }
 
+      /* Enhanced Three.js container */
       #three-container {
-        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+        opacity: 0.8;
+        mix-blend-mode: screen;
       }
 
       .events-section {
@@ -1501,10 +1568,15 @@
           -moz-osx-font-smoothing: grayscale;
         }
       }
+
+      /* Neuron network container */
+      #neuron-network {
+        display: none;
+      }
     </style>
   </head>
   <body>
-    <div id="three-container"></div>
+    
     <div class="content-wrapper">
       <div class="particle-container"></div>
       <div class="pixel-cursor"></div>
@@ -1561,7 +1633,10 @@
     </div>
     <div class="stars"></div>
 
+    
+
     <script>
+      /*
       // Custom cursor
       const cursor = document.querySelector('.pixel-cursor');
       document.addEventListener('mousemove', (e) => {
@@ -1734,112 +1809,143 @@
       }
       animateTrail();
 
-      // Remove entire Three.js section
-      // Three.js setup
+      // Three.js Globe Effect
+      const globeContainer = document.getElementById('three-container');
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
       const renderer = new THREE.WebGLRenderer({ 
         antialias: true, 
-        alpha: true 
+        alpha: true,
+        powerPreference: "high-performance"
       });
       renderer.setSize(window.innerWidth, window.innerHeight);
-      document.getElementById('three-container').appendChild(renderer.domElement);
+      renderer.setPixelRatio(window.devicePixelRatio);
+      globeContainer.appendChild(renderer.domElement);
 
-      // Create refined grid
-      const gridSize = 80;
-      const gridDivisions = 15;
-      const gridHelper = new THREE.GridHelper(gridSize, gridDivisions, 0x00ff00, 0x00ff00);
-      gridHelper.material.opacity = 0.03;
-      gridHelper.material.transparent = true;
-      gridHelper.rotation.x = Math.PI / 2;
-      gridHelper.position.y = -8;
-      scene.add(gridHelper);
+      // Create Earth sphere with texture
+      const earthGeometry = new THREE.SphereGeometry(5, 64, 64);
+      
+      // Load Earth textures
+      const textureLoader = new THREE.TextureLoader();
+      const earthTexture = textureLoader.load('https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_atmos_2048.jpg');
+      const earthBumpMap = textureLoader.load('https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_normal_2048.jpg');
+      const earthSpecularMap = textureLoader.load('https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_specular_2048.jpg');
+      const earthCloudsMap = textureLoader.load('https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_clouds_1024.png');
 
-      // Create floating elements
-      const elementsGroup = new THREE.Group();
-      scene.add(elementsGroup);
-
-      // Add floating cubes
-      const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
-      const cubeMaterial = new THREE.MeshBasicMaterial({
-        color: 0x00ff00,
-        transparent: true,
-        opacity: 0.1,
-        wireframe: true
+      const earthMaterial = new THREE.MeshPhongMaterial({
+        map: earthTexture,
+        bumpMap: earthBumpMap,
+        bumpScale: 0.05,
+        specularMap: earthSpecularMap,
+        specular: new THREE.Color('grey'),
+        shininess: 5
       });
+      const earth = new THREE.Mesh(earthGeometry, earthMaterial);
+      scene.add(earth);
 
-      for (let i = 0; i < 8; i++) {
-        const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-        cube.position.set(
-          (Math.random() - 0.5) * 30,
-          Math.random() * 15,
-          (Math.random() - 0.5) * 30
-        );
-        cube.scale.set(
-          Math.random() * 0.5 + 0.5,
-          Math.random() * 0.5 + 0.5,
-          Math.random() * 0.5 + 0.5
-        );
-        elementsGroup.add(cube);
-      }
-
-      // Add floating points
-      const pointsGeometry = new THREE.BufferGeometry();
-      const pointsCount = 30;
-      const pointsPositions = new Float32Array(pointsCount * 3);
-      
-      for (let i = 0; i < pointsCount; i++) {
-        pointsPositions[i * 3] = (Math.random() - 0.5) * 30;
-        pointsPositions[i * 3 + 1] = Math.random() * 15;
-        pointsPositions[i * 3 + 2] = (Math.random() - 0.5) * 30;
-      }
-      
-      pointsGeometry.setAttribute('position', new THREE.Float32BufferAttribute(pointsPositions, 3));
-      const pointsMaterial = new THREE.PointsMaterial({
-        color: 0x00ff00,
-        size: 0.3,
+      // Create clouds
+      const cloudsGeometry = new THREE.SphereGeometry(5.1, 64, 64);
+      const cloudsMaterial = new THREE.MeshPhongMaterial({
+        map: earthCloudsMap,
         transparent: true,
-        opacity: 0.1
+        opacity: 0.4,
+        side: THREE.DoubleSide
       });
+      const clouds = new THREE.Mesh(cloudsGeometry, cloudsMaterial);
+      scene.add(clouds);
+
+      // Create atmosphere
+      const atmosphereGeometry = new THREE.SphereGeometry(5.2, 64, 64);
+      const atmosphereMaterial = new THREE.ShaderMaterial({
+        uniforms: {
+          c: { type: "f", value: 0.1 },
+          p: { type: "f", value: 3.0 },
+          glowColor: { type: "c", value: new THREE.Color(0x00ff00) },
+          viewVector: { type: "v3", value: camera.position }
+        },
+        vertexShader: `
+          uniform vec3 viewVector;
+          uniform float c;
+          uniform float p;
+          varying float intensity;
+          void main() {
+            vec3 vNormal = normalize(normal);
+            vec3 vNormel = normalize(viewVector);
+            intensity = pow(c - dot(vNormal, vNormel), p);
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }
+        `,
+        fragmentShader: `
+          uniform vec3 glowColor;
+          varying float intensity;
+          void main() {
+            vec3 glow = glowColor * intensity;
+            gl_FragColor = vec4(glow, 1.0);
+          }
+        `,
+        side: THREE.BackSide,
+        blending: THREE.AdditiveBlending,
+        transparent: true
+      });
+      const atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
+      scene.add(atmosphere);
+
+      // Add lights
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+      scene.add(ambientLight);
+
+      const sunLight = new THREE.DirectionalLight(0xffffff, 1);
+      sunLight.position.set(5, 3, 5);
+      scene.add(sunLight);
+
+      // Add marker for Vancouver
+      const markerGeometry = new THREE.SphereGeometry(0.1, 16, 16);
+      const markerMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+      const marker = new THREE.Mesh(markerGeometry, markerMaterial);
       
-      const points = new THREE.Points(pointsGeometry, pointsMaterial);
-      elementsGroup.add(points);
+      // Position marker at Vancouver's coordinates
+      const vancouverLat = 49.2827;
+      const vancouverLon = -123.1207;
+      const radius = 5;
+      const phi = (90 - vancouverLat) * (Math.PI / 180);
+      const theta = (vancouverLon + 180) * (Math.PI / 180);
+      
+      marker.position.x = -(radius * Math.sin(phi) * Math.cos(theta));
+      marker.position.y = radius * Math.cos(phi);
+      marker.position.z = radius * Math.sin(phi) * Math.sin(theta);
+      
+      scene.add(marker);
 
       // Position camera
-      camera.position.set(15, 10, 15);
-      camera.lookAt(0, 0, 0);
+      camera.position.z = 15;
 
       // Animation loop
       function animate() {
         requestAnimationFrame(animate);
-
+        
+        // Rotate Earth
+        earth.rotation.y += 0.005;
+        clouds.rotation.y += 0.006;
+        atmosphere.rotation.y += 0.005;
+        
+        // Update marker position
         const time = Date.now() * 0.001;
-
-        // Subtle element movement
-        elementsGroup.children.forEach((element, index) => {
-          if (element instanceof THREE.Mesh) {
-            element.rotation.x += 0.01;
-            element.rotation.y += 0.01;
-            element.position.y += Math.sin(time + index) * 0.01;
-          }
-        });
-
-        // Subtle point movement
-        const pointPositions = points.geometry.attributes.position.array;
-        for (let i = 0; i < pointPositions.length; i += 3) {
-          pointPositions[i + 1] += Math.sin(time + i) * 0.005;
-        }
-        points.geometry.attributes.position.needsUpdate = true;
-
-        // Subtle camera movement
-        camera.position.x = Math.cos(time * 0.03) * 15;
-        camera.position.z = Math.sin(time * 0.03) * 15;
+        marker.position.x = -(radius * Math.sin(phi) * Math.cos(theta + time * 0.05));
+        marker.position.y = radius * Math.cos(phi);
+        marker.position.z = radius * Math.sin(phi) * Math.sin(theta + time * 0.05);
+        
+        // Pulsing glow effect
+        const pulse = Math.sin(time) * 0.1 + 0.1;
+        atmosphereMaterial.uniforms.c.value = pulse;
+        
+        // Camera movement
+        camera.position.x = Math.sin(time * 0.1) * 15;
+        camera.position.z = Math.cos(time * 0.1) * 15;
         camera.lookAt(0, 0, 0);
-
+        
         renderer.render(scene, camera);
       }
 
-      // Start animation
       animate();
 
       // Handle window resize
@@ -1848,6 +1954,7 @@
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
       });
+      */
     </script>
   </body>
 </html>
