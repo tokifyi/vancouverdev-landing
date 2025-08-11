@@ -1576,8 +1576,25 @@
     </style>
   </head>
   <body>
-    
     <div class="content-wrapper">
+      <div class="terminal">
+        <div class="terminal-header">
+          <span class="dot dot-red"></span>
+          <span class="dot dot-yellow"></span>
+          <span class="dot dot-green"></span>
+          <span class="title">vancouver.dev — terminal</span>
+        </div>
+        <div class="terminal-body">
+          <div class="line"><span class="ps1">vancouver.dev</span>:~$ <span class="typed" data-text="welcome to vancouver.dev"></span><span class="caret"></span></div>
+          <div class="line hint">Type a command or click one:</div>
+          <div class="line">$ help — <a class="cmd" href="https://lu.ma/app4vandev">join</a> • <a class="cmd" href="https://lu.ma/vancouver.dev">events</a> • <a class="cmd" href="#about">about</a></div>
+          <div class="line">$ join — opens Discord → <a class="link" href="https://lu.ma/app4vandev" target="_blank" rel="noopener">https://lu.ma/app4vandev</a></div>
+          <div class="line">$ events — upcoming schedule → <a class="link" href="https://lu.ma/vancouver.dev" target="_blank" rel="noopener">lu.ma/vancouver.dev</a></div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="content-wrapper" style="display:none">
       <div class="particle-container"></div>
       <div class="pixel-cursor"></div>
       <div class="retro-border"></div>
@@ -1626,7 +1643,7 @@
       </defs>
     </svg>
 
-    <div class="skyline">
+    <div class="skyline" style="display:none">
       <div class="buildings"></div>
       <div class="trees"></div>
       <div class="water"></div>
@@ -1635,326 +1652,62 @@
 
     
 
+    <style>
+      /* CLI-inspired styling */
+      .terminal {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 4px;
+        overflow: hidden;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+        color: var(--text-primary);
+        max-width: 880px;
+        margin: 48px auto;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      }
+      .terminal-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 12px;
+        background: rgba(0,0,0,0.4);
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+      }
+      .terminal-header .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+      .dot-red { background: #ff5f56; }
+      .dot-yellow { background: #ffbd2e; }
+      .dot-green { background: #27c93f; }
+      .terminal-header .title { margin-left: 8px; font-size: 12px; color: var(--text-secondary); }
+      .terminal-body { padding: 16px 18px 20px; background: #0b0f14; }
+      .line { line-height: 1.9; white-space: pre-wrap; word-break: break-word; }
+      .ps1 { color: var(--neon-green); font-weight: 600; }
+      .hint { color: var(--text-secondary); }
+      .cmd { color: var(--neon-green); text-decoration: none; border-bottom: 1px dotted rgba(0,255,149,0.5); }
+      .cmd:hover { opacity: 0.9; }
+      .link { color: var(--accent); text-decoration: none; }
+      .link:hover { text-decoration: underline; }
+      .caret { display: inline-block; width: 8px; height: 1.1em; background: var(--text-primary); margin-left: 2px; animation: blink 1s steps(1) infinite; vertical-align: -2px; }
+      @keyframes blink { 0%, 50% { opacity: 1 } 50.01%, 100% { opacity: 0 } }
+
+      /* Hide original sections for the CLI view */
+      .hero, .events-section, .join-section { display: none !important; }
+    </style>
+
     <script>
-      /*
-      // Custom cursor
-      const cursor = document.querySelector('.pixel-cursor');
-      document.addEventListener('mousemove', (e) => {
-        cursor.style.left = e.clientX + 'px';
-        cursor.style.top = e.clientY + 'px';
-      });
-
-      // Interactive elements
-      document.querySelectorAll('.nes-btn, .pixel-card').forEach(element => {
-        element.addEventListener('mouseenter', () => {
-          cursor.style.transform = 'scale(1.5)';
-        });
-        element.addEventListener('mouseleave', () => {
-          cursor.style.transform = 'scale(1)';
-        });
-      });
-
-      // Enhanced particle system with trails
-      const particleContainer = document.querySelector('.particle-container');
-      function createParticle() {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        const size = Math.random() * 6 + 2;
-        particle.style.width = size + 'px';
-        particle.style.height = size + 'px';
-        particle.style.left = Math.random() * 100 + 'vw';
-        particle.style.filter = `hue-rotate(${Math.random() * 360}deg) blur(${Math.random()}px)`;
-        particle.style.opacity = Math.random() * 0.7 + 0.3;
-        particle.style.animationDuration = Math.random() * 3 + 2 + 's';
-        
-        // Create particle trail
-        const trail = document.createElement('div');
-        trail.className = 'particle-trail';
-        trail.style.width = size / 2 + 'px';
-        trail.style.height = size * 4 + 'px';
-        trail.style.left = particle.style.left;
-        trail.style.filter = particle.style.filter;
-        trail.style.opacity = particle.style.opacity * 0.5;
-        particleContainer.appendChild(trail);
-        
-        particleContainer.appendChild(particle);
-        setTimeout(() => {
-          particle.remove();
-          trail.remove();
-        }, 3000);
-      }
-      setInterval(createParticle, 50);
-
-      // Enhanced 3D parallax effect
-      document.addEventListener('mousemove', (e) => {
-        const x = e.clientX;
-        const y = e.clientY;
-        const width = window.innerWidth;
-        const height = window.innerHeight;
-        
-        // Calculate relative position
-        const xRelative = (x - width / 2) / (width / 2);
-        const yRelative = (y - height / 2) / (height / 2);
-        
-        // Apply transform to different layers
-        document.querySelector('.hero').style.transform = 
-          `translateX(${xRelative * 20}px) translateY(${yRelative * 20}px) rotateX(${-yRelative * 10}deg) rotateY(${xRelative * 10}deg)`;
-        
-        document.querySelectorAll('.section').forEach(section => {
-          const rect = section.getBoundingClientRect();
-          const depth = (rect.top - height / 2) / height;
-          section.style.transform = 
-            `translateX(${xRelative * 30 * depth}px) translateY(${yRelative * 30 * depth}px) rotateX(${-yRelative * 5}deg) rotateY(${xRelative * 5}deg)`;
-        });
-      });
-
-      // Add glitch effect on scroll
-      let lastScroll = 0;
-      window.addEventListener('scroll', () => {
-        const currentScroll = window.scrollY;
-        const scrollDiff = Math.abs(currentScroll - lastScroll);
-        
-        if (scrollDiff > 30) {
-          document.body.style.setProperty('--distortion', Math.min(scrollDiff / 100, 1));
-          setTimeout(() => {
-            document.body.style.setProperty('--distortion', 0);
-          }, 100);
-        }
-        
-        lastScroll = currentScroll;
-      });
-
-      // Add hover effect for buttons
-      document.querySelectorAll('.nes-btn').forEach(button => {
-        button.addEventListener('mouseenter', () => {
-          button.style.transform = 'translateZ(20px) scale(1.1)';
-          const glow = document.createElement('div');
-          glow.className = 'button-glow';
-          glow.style.position = 'absolute';
-          glow.style.top = '0';
-          glow.style.left = '0';
-          glow.style.right = '0';
-          glow.style.bottom = '0';
-          glow.style.background = 'radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(0,255,0,0.2) 0%, transparent 70%)';
-          glow.style.filter = 'blur(5px)';
-          button.appendChild(glow);
-        });
-        
-        button.addEventListener('mouseleave', () => {
-          button.style.transform = '';
-          const glow = button.querySelector('.button-glow');
-          if (glow) glow.remove();
-        });
-      });
-
-      // Add interactive glitch effect
-      document.addEventListener('click', (e) => {
-        const glitch = document.createElement('div');
-        glitch.className = 'click-glitch';
-        glitch.style.left = e.clientX + 'px';
-        glitch.style.top = e.clientY + 'px';
-        document.body.appendChild(glitch);
-        setTimeout(() => glitch.remove(), 1000);
-      });
-
-      // Retro sound effects
-      const playSound = (sound) => {
-        const audio = new Audio();
-        audio.src = `data:audio/wav;base64,${sound}`;
-        audio.play();
-      };
-
-      // Add click sound to buttons
-      document.querySelectorAll('.nes-btn').forEach(button => {
-        button.addEventListener('click', () => {
-          playSound('UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU');
-        });
-      });
-
-      // Add keyboard interaction
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowUp') {
-          document.body.style.animation = 'none';
-          document.body.offsetHeight;
-          document.body.style.animation = 'glitch 0.5s';
-        }
-      });
-
-      // Mouse trail effect
-      const trail = document.createElement('div');
-      trail.style.position = 'fixed';
-      trail.style.width = '10px';
-      trail.style.height = '10px';
-      trail.style.background = 'var(--primary)';
-      trail.style.borderRadius = '50%';
-      trail.style.pointerEvents = 'none';
-      trail.style.zIndex = '9998';
-      document.body.appendChild(trail);
-
-      // Use existing mouseX and mouseY for trail
-      let trailX = 0;
-      let trailY = 0;
-
-      document.addEventListener('mousemove', (e) => {
-        trailX = e.clientX;
-        trailY = e.clientY;
-      });
-
-      function animateTrail() {
-        const dx = trailX - parseFloat(trail.style.left || '0');
-        const dy = trailY - parseFloat(trail.style.top || '0');
-        trail.style.left = (parseFloat(trail.style.left || '0') + dx * 0.1) + 'px';
-        trail.style.top = (parseFloat(trail.style.top || '0') + dy * 0.1) + 'px';
-        requestAnimationFrame(animateTrail);
-      }
-      animateTrail();
-
-      // Three.js Globe Effect
-      const globeContainer = document.getElementById('three-container');
-      const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-      const renderer = new THREE.WebGLRenderer({ 
-        antialias: true, 
-        alpha: true,
-        powerPreference: "high-performance"
-      });
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.setPixelRatio(window.devicePixelRatio);
-      globeContainer.appendChild(renderer.domElement);
-
-      // Create Earth sphere with texture
-      const earthGeometry = new THREE.SphereGeometry(5, 64, 64);
-      
-      // Load Earth textures
-      const textureLoader = new THREE.TextureLoader();
-      const earthTexture = textureLoader.load('https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_atmos_2048.jpg');
-      const earthBumpMap = textureLoader.load('https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_normal_2048.jpg');
-      const earthSpecularMap = textureLoader.load('https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_specular_2048.jpg');
-      const earthCloudsMap = textureLoader.load('https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_clouds_1024.png');
-
-      const earthMaterial = new THREE.MeshPhongMaterial({
-        map: earthTexture,
-        bumpMap: earthBumpMap,
-        bumpScale: 0.05,
-        specularMap: earthSpecularMap,
-        specular: new THREE.Color('grey'),
-        shininess: 5
-      });
-      const earth = new THREE.Mesh(earthGeometry, earthMaterial);
-      scene.add(earth);
-
-      // Create clouds
-      const cloudsGeometry = new THREE.SphereGeometry(5.1, 64, 64);
-      const cloudsMaterial = new THREE.MeshPhongMaterial({
-        map: earthCloudsMap,
-        transparent: true,
-        opacity: 0.4,
-        side: THREE.DoubleSide
-      });
-      const clouds = new THREE.Mesh(cloudsGeometry, cloudsMaterial);
-      scene.add(clouds);
-
-      // Create atmosphere
-      const atmosphereGeometry = new THREE.SphereGeometry(5.2, 64, 64);
-      const atmosphereMaterial = new THREE.ShaderMaterial({
-        uniforms: {
-          c: { type: "f", value: 0.1 },
-          p: { type: "f", value: 3.0 },
-          glowColor: { type: "c", value: new THREE.Color(0x00ff00) },
-          viewVector: { type: "v3", value: camera.position }
-        },
-        vertexShader: `
-          uniform vec3 viewVector;
-          uniform float c;
-          uniform float p;
-          varying float intensity;
-          void main() {
-            vec3 vNormal = normalize(normal);
-            vec3 vNormel = normalize(viewVector);
-            intensity = pow(c - dot(vNormal, vNormel), p);
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      // Minimal typing effect for the first line
+      (function(){
+        const el = document.querySelector('.typed');
+        if (!el) return;
+        const text = (el.getAttribute('data-text') || '').trim();
+        let i = 0;
+        const tick = () => {
+          if (i <= text.length) {
+            el.textContent = text.slice(0, i++);
+            setTimeout(tick, 28);
           }
-        `,
-        fragmentShader: `
-          uniform vec3 glowColor;
-          varying float intensity;
-          void main() {
-            vec3 glow = glowColor * intensity;
-            gl_FragColor = vec4(glow, 1.0);
-          }
-        `,
-        side: THREE.BackSide,
-        blending: THREE.AdditiveBlending,
-        transparent: true
-      });
-      const atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
-      scene.add(atmosphere);
-
-      // Add lights
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
-      scene.add(ambientLight);
-
-      const sunLight = new THREE.DirectionalLight(0xffffff, 1);
-      sunLight.position.set(5, 3, 5);
-      scene.add(sunLight);
-
-      // Add marker for Vancouver
-      const markerGeometry = new THREE.SphereGeometry(0.1, 16, 16);
-      const markerMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-      const marker = new THREE.Mesh(markerGeometry, markerMaterial);
-      
-      // Position marker at Vancouver's coordinates
-      const vancouverLat = 49.2827;
-      const vancouverLon = -123.1207;
-      const radius = 5;
-      const phi = (90 - vancouverLat) * (Math.PI / 180);
-      const theta = (vancouverLon + 180) * (Math.PI / 180);
-      
-      marker.position.x = -(radius * Math.sin(phi) * Math.cos(theta));
-      marker.position.y = radius * Math.cos(phi);
-      marker.position.z = radius * Math.sin(phi) * Math.sin(theta);
-      
-      scene.add(marker);
-
-      // Position camera
-      camera.position.z = 15;
-
-      // Animation loop
-      function animate() {
-        requestAnimationFrame(animate);
-        
-        // Rotate Earth
-        earth.rotation.y += 0.005;
-        clouds.rotation.y += 0.006;
-        atmosphere.rotation.y += 0.005;
-        
-        // Update marker position
-        const time = Date.now() * 0.001;
-        marker.position.x = -(radius * Math.sin(phi) * Math.cos(theta + time * 0.05));
-        marker.position.y = radius * Math.cos(phi);
-        marker.position.z = radius * Math.sin(phi) * Math.sin(theta + time * 0.05);
-        
-        // Pulsing glow effect
-        const pulse = Math.sin(time) * 0.1 + 0.1;
-        atmosphereMaterial.uniforms.c.value = pulse;
-        
-        // Camera movement
-        camera.position.x = Math.sin(time * 0.1) * 15;
-        camera.position.z = Math.cos(time * 0.1) * 15;
-        camera.lookAt(0, 0, 0);
-        
-        renderer.render(scene, camera);
-      }
-
-      animate();
-
-      // Handle window resize
-      window.addEventListener('resize', () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-      });
-      */
+        };
+        tick();
+      })();
     </script>
   </body>
 </html>
