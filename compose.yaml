@@ -1,4 +1,4 @@
-name: vancouver-landing
+name: vancouverdev-landing
 services:
   web:
     build: .

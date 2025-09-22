@@ -9,7 +9,7 @@ const Hero = () => {
            style={{ imageRendering: 'pixelated' }} />
       <div className="relative z-10 text-center px-4">
         <h1 className="font-pixel text-neon-green text-4xl md:text-5xl mb-6">&lt;vancouver.dev&gt;</h1>
-        <p className="font-pixel text-neon-blue text-sm md:text-base mb-8">build together in the pixelverse</p>
+        <p className="font-pixel text-neon-blue text-sm md:text-base mb-8">build together in vancouver</p>
         <Button 
           className="font-pixel bg-neon-green text-background hover:bg-neon-green/90 border-2 border-black shadow-pixel hover:shadow-pixel-hover transition-all px-8 py-6"
           onClick={() => window.open('https://discord.gg/vancouverdev', '_blank')}
